@@ -19,6 +19,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'username',
         'email',
         'password',
     ];
@@ -42,4 +43,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function postingan() {
+        return $this->hasMany(Postingan::class);
+    }
+    public function likedPost() {
+        return $this->belongsToMany(Postingan::class, 'likes', 'user_id', 'postingan_id')->withTimestamps();
+    }
 }

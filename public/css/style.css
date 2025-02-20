@@ -1,3 +1,7 @@
 /* .class {
     text-align: justify;
 } */
+
+.custom-swal-popup {
+    z-index: 99999999 !important;
+}

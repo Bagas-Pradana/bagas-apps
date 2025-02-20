@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.text-shadow-red {
+    @apply text-red-600 font-semibold text-xs;
+    text-shadow: 0px 0px 1px red;
+}
