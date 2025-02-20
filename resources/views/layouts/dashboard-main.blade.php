@@ -21,7 +21,7 @@
 
 <body>
     <!-- Navigation Panel -->
-    @include('dashboard.layouts.menu')
+    @include('partials.menu')
     <!-- End Navigation Panel -->
     <!-- Content -->
     @yield('dash-content')

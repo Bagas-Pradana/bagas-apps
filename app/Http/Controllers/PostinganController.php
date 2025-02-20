@@ -19,9 +19,9 @@ class PostinganController extends Controller
     // Main Laravel
     public function welcome (): \Illuminate\Contracts\View\View {return view('welcome');}
     // My App
-    public function index(): \Illuminate\Contracts\View\View {return view('url.home', ['hidup' => 'home']);}
+    public function index(): \Illuminate\Contracts\View\View {return view('home', ['hidup' => 'home']);}
     public function about(): \Illuminate\Contracts\View\View {
-        return view('url.about',
+        return view('about',
         [
             'hidup' => 'about',
             'nama' => 'Bagas Pradana',
@@ -30,7 +30,7 @@ class PostinganController extends Controller
     }
     public function post(Postingan $postingan): \Illuminate\Contracts\View\View {
         // $postingan = new Postingan();
-        return view('url.post',
+        return view('post',
         [
             'hidup' => '',
             'post' => $postingan
@@ -52,7 +52,7 @@ class PostinganController extends Controller
             $author = User::firstWhere('username', request('author'));
             $title = 'User: ' . $author->name;
         }
-        return view('url.blog',
+        return view('blog',
         [
             'title' => 'About Post ' . $title,
             'hidup' => 'blog',
@@ -61,38 +61,38 @@ class PostinganController extends Controller
             'post' => Postingan::latest()->pencarian(request(['key', 'category', 'author']))->paginate(4)->withQueryString()
         ]);
     }
-    // public function category(Category $category): \Illuminate\Contracts\View\View {
-    //     return view('url.category',
-    //     [
-    //         'hidup' => '',
-    //         'title' => $category,
-    //         'post' => $category->postingan->load('category', 'author'),
-    //         'category' => $category->nama_kategory
-    //     ]);
-    // }
+    public function category(Category $category): \Illuminate\Contracts\View\View {
+        return view('category',
+        [
+            'hidup' => '',
+            'title' => $category,
+            'post' => $category->postingan->load('category', 'author'),
+            'category' => $category->nama_kategory
+        ]);
+    }
     public function categories(): \Illuminate\Contracts\View\View {
         // $category = new Category();
         // @dd($category->first());
         $hasil = Category::with('postingan')->get();
-        return view('url.listcategory',
+        return view('listcategory',
         [
             'hidup' => 'categories',
             'post' => Category::with('postingan')->get(),
         ]);
 
     }
-    // public function author(User $author): \Illuminate\Contracts\View\View {
-    //     return view('url.user',
-    //     [
-    //         'hidup' => '',
-    //         'title' => $author,
-    //         'post' => $author->postingan->load('category', 'author'),
-    //         'user' => $author->name,
-    //     ]);
-    // }
+    public function author(User $author): \Illuminate\Contracts\View\View {
+        return view('user',
+        [
+            'hidup' => '',
+            'title' => $author,
+            'post' => $author->postingan->load('category', 'author'),
+            'user' => $author->name,
+        ]);
+    }
     public function userlist(): \Illuminate\Contracts\View\View {
         // $user = new User();
-        return view('url.listuser',
+        return view('listuser',
         [
             'hidup' => 'userlist',
             'post' => User::with('postingan')->get(),

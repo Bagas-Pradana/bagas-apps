@@ -12,8 +12,8 @@
 
     @endforeach --}}
 
-      {{-- Fitur Search --}}
-      <form action="/blog" method="get">
+    {{-- Fitur Search --}}
+    <form action="/blog" method="get">
         <div class="flex flex-wrap mx-auto px-12 py-8 w-[95%] justify-center">
             <input type="text" value="{{ request('key') }}" id="first_name" name="key" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-l-lg block w-[40%] p-2" placeholder="Pencarian"/>
             <button type="submit" name="klik" value="1" id="klik" class="py-[0.3rem] px-3 font-bold bg-blue-600 inline-block w-fit rounded-r-lg text-white">Cari</button>
@@ -23,7 +23,12 @@
     {{-- New Post If postingan empty === post not found--}}
     @if ($post->count())
     <div class="mx-auto px-12 py-8 w-[95%] min-h-full flex flex-col gap-y-4">
-        <img src="{{ $post[0]->images }}" class="card-img-top self-center w-[600px]" alt="Postingan">
+        {{-- <img src="{{ $post[0]->images }}" class="card-img-top self-center w-[600px]" alt="Postingan"> --}}
+        @if ($post[0]->images)
+            <img src="{{ asset('storage/' . $post[0]->images) }}" class="card-img-top self-center w-[600px]" alt="Postingan">
+        @else
+            <img class="aspect-[5.5/3] object-cover object-top" src="https://fastly.picsum.photos/id/276/300/200.jpg?hmac=PqQb3_Pue9TG1kb_XmcM0QBEE88fpxbskzQbUhWZqv4" alt="{{ $post[0]->images }}">
+        @endif
         <div class="flex flex-col gap-y-4 font-bold">
             <h5 class="text-2xl"><a href="/post/{{ $post[0]->slug }}">{{ $post[0]->judul }}</a></h5>
             <h2 class="text-xl font-semibold text-slate-900">Jenis:
@@ -49,7 +54,12 @@
             {{-- @dd($hasil->user) --}}
             <div class="relative w-[30%] min-w-[250px] flex flex-col justify-start items-center gap-4 border-2 border-gray-600 rounded-lg">
                 <div class="absolute top-0 p-[0.35rem] rounded-sm bg-slate-600 font-bold text-white bg-opacity-85"><a href="/categories/{{ $hasil->category->slug }}">{{ $hasil->category->nama_kategory }}</a></div>
-                <img src="{{ $post[0]->images }}" class="card-img-top self-center w-full max-h-[300px]" alt="Postingan">
+                {{-- <img src="{{ $post[0]->images }}" class="card-img-top self-center w-full max-h-[300px]" alt="Postingan"> --}}
+                @if ($hasil->images)
+                    <img src="{{ asset('storage/' . $hasil->images) }}" class="card-img-top self-center w-[600px]" alt="Postingan">
+                @else
+                    <img class="aspect-[5.5/3] object-cover object-top" src="https://fastly.picsum.photos/id/276/300/200.jpg?hmac=PqQb3_Pue9TG1kb_XmcM0QBEE88fpxbskzQbUhWZqv4" alt="{{ $post[0]->images }}">
+                @endif
                 <h2 class="text-cyan-700 font-bold text-xl">
                     <a href="/post/{{ $hasil->slug }}">{{ $hasil->judul }}</a>
                 </h2>

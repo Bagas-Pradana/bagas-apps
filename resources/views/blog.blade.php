@@ -179,7 +179,7 @@
 
 {{-- Javascript Handling Like dan PopUp --}}
 @push('script')
-    <script src="{{ asset('js/test.js') }}"></script>
+    <script src="{{ asset('js/script-like.js') }}"></script>
 @endpush
 
 {{-- Handling Success Login --}}

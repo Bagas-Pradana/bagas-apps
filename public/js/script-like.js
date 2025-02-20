@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('sub-judul').classList.remove('hidden');
                     document.getElementById('link-author').setAttribute('href', `/listuser/${data.author.username}`);
                     document.getElementById('link-author').innerHTML = data.author.name;
-                    document.getElementById('link-category').setAttribute('href', `/listuser/${data.category.slug}`);
+                    document.getElementById('link-category').setAttribute('href', `/categories/${data.category.slug}`);
                     document.getElementById('link-category').innerHTML = data.category.nama_kategory;
 
                     // Periksa gambar

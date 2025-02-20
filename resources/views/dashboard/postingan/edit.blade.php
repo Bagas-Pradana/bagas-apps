@@ -1,4 +1,4 @@
-@extends('dashboard.layouts.main')
+@extends('layouts.dashboard-main')
 
 @section('title', 'Create Form')
 

@@ -15,7 +15,19 @@ class LikeController extends Controller
     public function likePostingan($id) {
         $postingan = Postingan::where('id', $id)->first();
         // dd($postingan);
+        // dd(Auth::user());
 
+       // Cek Jika User Belum Login dan User Bagas
+        $user = Auth::user();
+        if(!Auth::user() || Auth::user()->id === 6) {
+            // dd('Gagal', [
+            //             'message' => 'Gagal Like',
+            //             'likes' => $postingan->likes()->count()
+            //         ]);
+            return response()->json([
+                'message' => 'Anda Tidak Di izinkan'
+            ]);
+        }
         if (!$postingan) {
             dd('sini', [
                 'message' => 'Not Found Data',
@@ -24,11 +36,10 @@ class LikeController extends Controller
                 'message' => 'Not Found Data',
             ], 404);
         }
-        dd('lanjut', [
-            'message' => 'Unlike berhasil',
-            'likes' => 'adi' . $postingan->likes()->count() // Mengembalikan jumlah like terbaru like.count class
-        ]);
-        $user = Auth::user();
+        // dd('lanjut', [
+        //     'message' => 'Unlike berhasil',
+        //     'likes' => $postingan->likes()->count() // Mengembalikan jumlah like terbaru like.count class
+        // ]);
 
         // Cek apakah user sudah like postingan ini
         $existingLike = Like::where('postingan_id', $postingan->id)
@@ -41,7 +52,7 @@ class LikeController extends Controller
 
             return response()->json([
                 'message' => 'Unlike berhasil',
-                'likes' => 'adi' . $postingan->likes()->count() // Mengembalikan jumlah like terbaru like.count class
+                'likes' => $postingan->likes()->count() // Mengembalikan jumlah like terbaru like.count class
             ]);
         }
 
@@ -65,6 +76,7 @@ class LikeController extends Controller
                 'message' => 'Berhasil like',
                 'likes' => $postingan->likes()->count() // Mengembalikan jumlah like terbaru like.count class
             ]);
+
         } catch (\Throwable $th) {
             DB::rollBack();
             Log::error('Error saat like postingan', [

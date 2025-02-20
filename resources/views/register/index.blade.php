@@ -74,42 +74,30 @@
 
         {{-- Gagal Registrasi --}}
         @if(session('failed'))
-            @push('script')
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        if (typeof Swal !== 'undefined') {
-                            let errorMessages = {!! json_encode(session('validationErrors'), JSON_HEX_TAG) !!};
-                            let formattedErrors = "";
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                if (typeof Swal !== 'undefined') {
+                    let errorMessages = {!! session('validationErrors') !!}; // Ambil error dari session
+                    // let errorMessage = @json(session('failed'));
+                    let formattedErrors = "";
 
-                            if (errorMessages) {
-                                for (const field in errorMessages) {
-                                    formattedErrors += errorMessages[field].join("<br>") + "<br>";
-                                }
-                            }
-
-                            // Simpan pesan error ke sessionStorage agar tetap ada saat reload
-                            if (formattedErrors) {
-                                sessionStorage.setItem('errorMessage', formattedErrors);
-                            }
-
-                            // Cek sessionStorage untuk menampilkan alert
-                            let storedMessage = sessionStorage.getItem('errorMessage');
-                            if (storedMessage) {
-                                Swal.fire({
-                                    title: "Anda Gagal Login!",
-                                    html: storedMessage, // Menggunakan `html` agar bisa format `<br>`
-                                    icon: "error"
-                                });
-
-                                // Hapus pesan setelah ditampilkan agar tidak muncul lagi setelah reload
-                                sessionStorage.removeItem('errorMessage');
-                            }
-                        } else {
-                            console.error("SweetAlert2 belum termuat.");
+                    if (errorMessages) {
+                        for (const field in errorMessages) {
+                            formattedErrors += errorMessages[field] + "<br>";
                         }
+                    }
+
+                    Swal.fire({
+                        title: "Registrasi Gagal!",
+                        html: formattedErrors,
+                        icon: "error",
+                        confirmButtonText: "OK"
                     });
-                </script>
-            @endpush
+                } else {
+                    console.error("SweetAlert2 belum termuat.");
+                    }
+                });
+            </script>
         @endif
         {{-- End Gagal Registrasi --}}
 

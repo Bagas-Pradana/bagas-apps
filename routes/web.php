@@ -23,73 +23,62 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-// Guest and Auth Accesss
-Route::controller(PostinganController::class)->group(function () {
-    Route::get('/', 'index')->name('home');
-    Route::get('/about', 'about')->name('about');
-    Route::get('/blog', 'blog')->name('blog');
-    Route::get('/categories', 'categories')->name('categories');
-    Route::get('/listuser', 'userlist')->name('userlist');
-    // Single Route Extend posts
-    Route::get('/post/{postingan:slug}', 'post')->name('post');
-    // Single Route for category Group
-    Route::get('/categories/{category:slug}', 'category')->name('category');
-    // Single Route for User Group
-    Route::get('/listuser/{author:username}', 'author')->name('author');
-    Route::middleware('guest')->group(function (){
-        Route::get('/trial', 'welcome')->name('welcome');  //Default Laravel
-    });
-});
 
-// Login Access
-Route::controller(LoginController::class)->group(function () {
-    Route::post('/login', 'authenticate')->name('authenticate');
-    Route::post('/logout', 'logout')->name('logout');
-    Route::middleware('guest')->group(function() {
-        Route::get('/login', 'index')->name('login');
-    });
-});
-
-// Register Access
-Route::controller(RegisterController::class)->group(function () {
-    Route::post('/register', 'store')->name('store');
-    Route::middleware('guest')->group(function () {
-        Route::get('/register', 'index')->name('register');
-    });
-});
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard.dashboard', ['hidup' => 'dashboard']);
-    })->name('dashboard');
-});
-
-// Dashboard User
-Route::resource('/dashboard/blog', DashboardPostinganController::class)->parameters(['blog' => 'postingan']);
-Route::get('/dashboard/blog/checkSlug', [DashboardPostinganController::class, 'checkSlug']);
-Route::middleware('auth')->group(function () {
-});
-
+Route::get('/trial', function() { return view('welcome'); })->name('welcome');  //Default Laravel
+Route::get('/', [PostinganController::class, 'index'])->name('home');
+Route::get('/about', [PostinganController::class, 'about'])->name('about');
+Route::get('/blog', [PostinganController::class, 'blog'])->name('blog');
+Route::get('/categories', [PostinganController::class, 'categories'])->name('categories');
+Route::get('/listuser', [PostinganController::class, 'userlist'])->name('userlist');
+// Single Route Extend posts
+Route::get('/post/{postingan:slug}', [PostinganController::class, 'post'])->name('post');
+// Single Route for category Group
+Route::get('/categories/{category:slug}', [PostinganController::class, 'category'])->name('category');
+// Single Route for User Group
+Route::get('/listuser/{author:username}', [PostinganController::class, 'author'])->name('author');
 // data PopUp Postingan bedasarkan Ajax
 Route::get('/post/{postingan:slug}', function (Postingan $postingan) {
     return response()->json($postingan);
 });
 
-// Admin Access
-Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('is_admin'); //menghapus fungsi show
+Route::middleware('guest')->group(function (){
+    Route::get('/login', [LoginController::class, 'index'])->name('login');
+    Route::post('/register',[RegisterController::class, 'store'])->name('store');
+    Route::get('/register',[RegisterController::class, 'index'])->name('register');
+    Route::post('/login', [LoginController::class, 'authenticate'])->name('authenticate');
+});
 
-// Route like dan Unlike
-Route::middleware('auth')->group(function(){
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    // Dashboard User
+    Route::get('/dashboard', function () {
+        return view('dashboard.dashboard', ['hidup' => 'dashboard']);
+    })->name('dashboard');
+    Route::resource('/dashboard/blog', DashboardPostinganController::class)->parameters(['blog' => 'postingan']);
+    Route::get('/dashboard/blog/checkSlug', [DashboardPostinganController::class, 'checkSlug']);
+    // Admin Access
+    Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('is_admin'); //menghapus fungsi show
+    // Route like dan Unlike
     Route::post('/like/{id}', [LikeController::class, 'likePostingan'])->name('likePostingan');
+    // Route like dan Unlike
+    Route::get('/get-likes/{postingan}', function ($id) {
+        $postingan = App\Models\Postingan::findOrFail($id);
+        // return response()->json(['likes' => $postingan->like()->count()]);
+        if (!$postingan) {
+            return response()->json(['error' => 'Postingan tidak ditemukan'], 404);
+        }
+        return response()->json([
+            'likes' => $postingan->likes()->count()  //response yang diterima ketika klik tombol read more dan diberikan ke html button like
+        ]);
+    });
 });
-Route::get('/get-likes/{postingan}', function ($id) {
-    $postingan = App\Models\Postingan::findOrFail($id);
-    // return response()->json(['likes' => $postingan->like()->count()]);
-    if (!$postingan) {
-        return response()->json(['error' => 'Postingan tidak ditemukan'], 404);
-    }
-    return response()->json([
-        'likes' => $postingan->likes()->count()  //response yang diterima ketika klik tombol read more dan diberikan ke html button like
-    ]);
-});
+
+
+
+
+
+
+
+
 
 
